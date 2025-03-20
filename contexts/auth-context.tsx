@@ -13,6 +13,7 @@ import {
   signInWithPopup,
   getAuth,
 } from "firebase/auth"
+import { getRandomProfileImage } from "@/lib/image-utils"
 import { initializeApp, getApps } from "firebase/app"
 import { getFirestore } from "firebase/firestore"
 import { getStorage } from "firebase/storage"
@@ -66,6 +67,8 @@ interface AuthContextType {
   authError: string | null
   isUsingDemoMode: boolean
   activateDemoMode: (email: string) => void
+  displayName?: string | null
+  photoURL?: string | null
 }
 
 // Create context with default values
@@ -129,9 +132,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const handleAuthError = (error: any) => {
     console.error("Authentication error:", error)
-    setAuthError(error.message || "An authentication error occurred.")
-    // Activate demo mode on auth error
-    setIsUsingDemoMode(true)
+    const errorMessage = error.code ? `Authentication error: ${error.code}` : error.message || "An authentication error occurred."
+    setAuthError(errorMessage)
+
+    // Only activate demo mode for specific errors
+    if (
+      error.code === "auth/operation-not-allowed" ||
+      error.code === "auth/unauthorized-domain" ||
+      error.code === "auth/configuration-not-found"
+    ) {
+      setIsUsingDemoMode(true)
+    }
   }
 
   const signUp = async (email: string, password: string) => {
@@ -197,11 +208,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  const activateDemoMode = (email: string) => {
+  const activateDemoMode = async (email: string) => {
+    // Get a random profile image
+    const photoURL = await getRandomProfileImage(email.split("@")[0])
+    
     // Create a demo user in localStorage
     const demoUser = {
       email,
       displayName: email.split("@")[0],
+      photoURL,
       uid: `demo-${Date.now()}`,
       isDemo: true,
     }
@@ -221,6 +236,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     authError,
     isUsingDemoMode,
     activateDemoMode,
+    displayName: isUsingDemoMode ? JSON.parse(localStorage.getItem("demoUser") || "{}").displayName : user?.displayName,
+    photoURL: isUsingDemoMode ? JSON.parse(localStorage.getItem("demoUser") || "{}").photoURL : user?.photoURL,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
