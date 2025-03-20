@@ -182,7 +182,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     try {
       const provider = new GoogleAuthProvider()
-      await signInWithPopup(initializedAuth, provider)
+      const result = await signInWithPopup(initializedAuth, provider)
+      const user = result.user
+
+      // Store additional user data if needed
+      if (user && (user.displayName || user.photoURL)) {
+        localStorage.setItem('userProfile', JSON.stringify({
+          displayName: user.displayName,
+          photoURL: user.photoURL
+        }))
+      }
     } catch (error) {
       handleAuthError(error)
     }
@@ -236,8 +245,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     authError,
     isUsingDemoMode,
     activateDemoMode,
-    displayName: isUsingDemoMode ? JSON.parse(localStorage.getItem("demoUser") || "{}").displayName : user?.displayName,
-    photoURL: isUsingDemoMode ? JSON.parse(localStorage.getItem("demoUser") || "{}").photoURL : user?.photoURL,
+    displayName: isUsingDemoMode 
+      ? JSON.parse(localStorage.getItem("demoUser") || "{}").displayName 
+      : user?.displayName || JSON.parse(localStorage.getItem('userProfile') || '{}').displayName,
+    photoURL: isUsingDemoMode 
+      ? JSON.parse(localStorage.getItem("demoUser") || "{}").photoURL 
+      : user?.photoURL || JSON.parse(localStorage.getItem('userProfile') || '{}').photoURL,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
