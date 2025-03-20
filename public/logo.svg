@@ -1,0 +1,28 @@
+<svg width="200" height="50" viewBox="0 0 200 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M20 10H40V15H20V10Z" fill="#F5A623"/>
+  <path d="M15 15H20V40H15V15Z" fill="#F5A623"/>
+  <path d="M40 15H45V40H40V15Z" fill="#F5A623"/>
+  <path d="M20 40H40V45H20V40Z" fill="#F5A623"/>
+  <path d="M50 10H55V45H50V10Z" fill="#FF5722"/>
+  <path d="M60 10H80V15H60V10Z" fill="#FF5722"/>
+  <path d="M60 25H75V30H60V25Z" fill="#FF5722"/>
+  <path d="M60 40H80V45H60V40Z" fill="#FF5722"/>
+  <path d="M85 10H90V45H85V10Z" fill="#F5A623"/>
+  <path d="M95 10H115V15H95V10Z" fill="#F5A623"/>
+  <path d="M95 25H110V30H95V25Z" fill="#F5A623"/>
+  <path d="M95 40H115V45H95V40Z" fill="#F5A623"/>
+  <path d="M120 10H125V45H120V10Z" fill="#FF5722"/>
+  <path d="M130 10H150V15H130V10Z" fill="#FF5722"/>
+  <path d="M130 15H135V45H130V15Z" fill="#FF5722"/>
+  <path d="M140 20H150V25H140V20Z" fill="#FF5722"/>
+  <path d="M140 30H150V35H140V30Z" fill="#FF5722"/>
+  <path d="M155 10H175V15H155V10Z" fill="#F5A623"/>
+  <path d="M155 15H160V45H155V15Z" fill="#F5A623"/>
+  <path d="M165 20H175V25H165V20Z" fill="#F5A623"/>
+  <path d="M165 30H175V35H165V30Z" fill="#F5A623"/>
+  <path d="M180 10H185V45H180V10Z" fill="#FF5722"/>
+  <path d="M190 10H195V45H190V10Z" fill="#FF5722"/>
+  <path d="M185 10H190V15H185V10Z" fill="#FF5722"/>
+  <path d="M185 40H190V45H185V40Z" fill="#FF5722"/>
+</svg>
+
