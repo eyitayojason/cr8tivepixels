@@ -101,8 +101,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Check for demo user on mount
-    if (typeof window !== "undefined") {
-      const demoUser = localStorage.getItem("demoUser")
+    if (typeof window === "undefined") {
+      // Server-side rendering, set initial state
+      setLoading(false)
+      return
+    }
+
+    try {
+      const demoUser = window.localStorage.getItem("demoUser")
       if (demoUser) {
         setIsUsingDemoMode(true)
         setLoading(false)
@@ -127,6 +133,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Cleanup subscription
         return () => unsubscribe()
       }
+    } catch (error) {
+      console.error("Error accessing localStorage:", error)
+      setLoading(false)
     }
   }, [])
 
@@ -236,7 +245,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const value = {
-    user: isUsingDemoMode ? JSON.parse(localStorage.getItem("demoUser") || "{}") : user,
+    user: isUsingDemoMode && typeof window !== "undefined" ? JSON.parse(window.localStorage.getItem("demoUser") || "{}") : user,
     loading,
     signUp,
     signIn,
@@ -245,12 +254,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     authError,
     isUsingDemoMode,
     activateDemoMode,
-    displayName: isUsingDemoMode 
-      ? JSON.parse(localStorage.getItem("demoUser") || "{}").displayName 
-      : user?.displayName || JSON.parse(localStorage.getItem('userProfile') || '{}').displayName,
-    photoURL: isUsingDemoMode 
-      ? JSON.parse(localStorage.getItem("demoUser") || "{}").photoURL 
-      : user?.photoURL || JSON.parse(localStorage.getItem('userProfile') || '{}').photoURL,
+    displayName: isUsingDemoMode && typeof window !== "undefined"
+      ? JSON.parse(window.localStorage.getItem("demoUser") || "{}").displayName 
+      : user?.displayName || (typeof window !== "undefined" ? JSON.parse(window.localStorage.getItem('userProfile') || '{}').displayName : null),
+    photoURL: isUsingDemoMode && typeof window !== "undefined"
+      ? JSON.parse(window.localStorage.getItem("demoUser") || "{}").photoURL 
+      : user?.photoURL || (typeof window !== "undefined" ? JSON.parse(window.localStorage.getItem('userProfile') || '{}').photoURL : null),
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
